@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+streamlit
+sqlalchemy
+google-genai
+python-jose[cryptography]
+passlib[bcrypt]
+python-dotenv
+pyyaml
+requests
