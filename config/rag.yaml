@@ -1,0 +1,6 @@
+
+research_settings:
+  tools:
+    - google_search: {}
+  max_search_queries: 5
+  depth: "medium"
