@@ -1,0 +1,17 @@
+
+nexus_intel_schema:
+  version: "1.0"
+  fields:
+    - name: company_name
+      type: str
+      required: True
+    - name: summary
+      type: str
+      max_length: 500
+    - name: emails
+      type: list[str]
+    - name: phone_numbers
+      type: list[str]
+    - name: socials
+      type: list[dict]
+      properties: [platform, url]
