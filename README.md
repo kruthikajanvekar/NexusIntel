@@ -1,4 +1,4 @@
-# 🏢 NexusIntel - Internal Website Intelligence & Contact Discovery
+#  NexusIntel - Internal Website Intelligence & Contact Discovery
 
 **NexusIntel** is a high-performance, internal research engine designed for sales teams, analysts, and lead generation specialists. It automates the extraction of business intelligence and verified contact information directly from the web using state-of-the-art AI.
 
