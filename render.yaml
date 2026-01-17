@@ -4,12 +4,13 @@ services:
     name: nexus-intel-api
     env: python
     plan: free
+    region: oregon
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.api:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /
     envVars:
       - key: API_KEY
-        sync: false # Set this manually in the Render Dashboard -> Env Vars
+        sync: false # Must be added manually in Render Dashboard after creation
       - key: SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
@@ -22,6 +23,7 @@ services:
     name: nexus-intel-dashboard
     env: python
     plan: free
+    region: oregon
     buildCommand: pip install -r requirements.txt
     startCommand: streamlit run app/dashboard.py --server.port $PORT --server.address 0.0.0.0
     healthCheckPath: /healthz
