@@ -1,0 +1,37 @@
+services:
+  # 1. Backend Service (FastAPI)
+  - type: web
+    name: nexus-intel-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: API_KEY
+        sync: false # You MUST add this manually in Render Dashboard after first deploy
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: PYTHONPATH
+        value: .
+
+  # 2. Frontend Service (Streamlit)
+  - type: web
+    name: nexus-intel-dashboard
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app/dashboard.py --server.port $PORT --server.address 0.0.0.0
+    healthCheckPath: /healthz
+    envVars:
+      - key: BACKEND_URL
+        fromService:
+          name: nexus-intel-api
+          type: web
+          property: host
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: PYTHONPATH
+        value: .
