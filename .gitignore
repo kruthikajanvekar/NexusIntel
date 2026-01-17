@@ -1,0 +1,30 @@
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.env.local
+.venv
+venv/
+ENV/
+env/
+active_env/
+
+# Database
+*.db
+nexus_intel.db
+nexus_intel.db-journal
+
+# Streamlit
+.streamlit/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
