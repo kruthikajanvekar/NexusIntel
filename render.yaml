@@ -9,7 +9,7 @@ services:
     healthCheckPath: /
     envVars:
       - key: API_KEY
-        sync: false # You MUST add this manually in Render Dashboard after first deploy
+        sync: false # Set this manually in the Render Dashboard -> Env Vars
       - key: SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
