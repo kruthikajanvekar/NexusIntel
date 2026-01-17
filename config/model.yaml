@@ -1,0 +1,8 @@
+
+generation_config:
+  model_name: "gemini-3-flash-preview"
+  temperature: 0.1
+  top_p: 1.0
+  response_mime_type: "application/json"
+  thinking_config:
+    thinking_budget: 0
