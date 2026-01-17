@@ -1,89 +1,88 @@
 # 🏢 NexusIntel - Internal Website Intelligence & Contact Discovery
 
-NexusIntel is an enterprise-grade internal research platform designed to automate the process of company discovery and contact extraction.
+**NexusIntel** is a high-performance, internal research engine designed for sales teams, analysts, and lead generation specialists. It automates the extraction of business intelligence and verified contact information directly from the web using state-of-the-art AI.
 
 ---
 
 ## 📋 Problem Statement
-In B2B sales, market research, and lead generation, analysts spend hours manually scouring websites to find:
-- **Verified contact information** (Emails, Phone numbers).
-- **Core business summaries**.
-- **Physical office locations** and social media presence.
+In the modern B2B landscape, manual company research is a massive bottleneck. Research analysts often spend **40-60% of their day** performing repetitive tasks:
+- Manually browsing corporate websites to find core business descriptions.
+- Searching for "Contact Us" or "About" pages to hunt for emails and phone numbers.
+- Navigating footers to find social media links and physical office addresses.
+- Cross-referencing data points to ensure accuracy.
 
-This manual process is slow, prone to human error, and the data is often lost in spreadsheets or disparate notes.
+This manual process is **slow**, **unscalable**, and **highly prone to human error**, leading to stale leads and wasted outreach efforts.
 
 ## 💡 The Solution
-**NexusIntel** provides a centralized, AI-powered "Intelligence Unit." By simply entering a company URL, the system's autonomous Research Agent:
-1.  **Scans the Web**: Uses Gemini 3 Pro with real-time Google Search grounding.
-2.  **Extracts Intelligence**: Intelligently identifies and structures unstructured web data.
-3.  **Archives Records**: Saves everything into a local database for future reference and internal sharing.
+**NexusIntel** acts as an autonomous "Intelligence Unit" that bridges the gap between raw web data and structured CRM-ready records. 
+
+By simply providing a domain URL, the system:
+1.  **Autonomous Web Scanning**: Uses Gemini 3's real-time Google Search grounding to scan the entire internet for mentions of the target company.
+2.  **Intelligent Data Structuring**: Leverages LLMs to understand unstructured web content and extract specific entities (Emails, Phone numbers, Addresses) with high confidence.
+3.  **Centralized Repository**: Automatically archives every discovery into a secure local database for internal cross-referencing and auditing.
+
+---
+
+## 🛠️ Tech Stack
+
+### **Frontend & Interface**
+- **Streamlit**: Powers the interactive dashboard. Chosen for its rapid development cycle and specialized support for data-heavy internal tools.
+- **Custom CSS (Tailwind-inspired)**: Custom-built "Obsidian Dark" theme for a professional, high-focus user experience.
+
+### **Backend Engine**
+- **FastAPI**: A modern, fast (high-performance) web framework for building APIs with Python 3.9+ based on standard Python type hints.
+- **Uvicorn**: Lightning-fast ASGI server implementation for the API layer.
+- **Python-Jose (JWT)**: Secure authentication system using JSON Web Tokens for session-based access control.
+
+### **Artificial Intelligence (The Brain)**
+- **Google GenAI SDK**: Integrates the latest **Gemini 3** series models.
+- **Google Search Grounding**: Direct integration with Google's search engine to prevent "AI Hallucinations" and provide up-to-the-minute data.
+- **JSON Schema Enforcement**: Ensures the AI output is always valid and can be parsed by our backend.
+
+### **Data & Persistence**
+- **SQLite**: A lightweight, serverless relational database engine used for local data sovereignty.
+- **SQLAlchemy ORM**: Object-Relational Mapper that allows for easy migration to enterprise databases (PostgreSQL/SQL Server) if needed.
 
 ---
 
 ## 🚀 Technical Architecture
 
-### 1. Backend (FastAPI Engine)
-- **Security**: Implements JWT (JSON Web Tokens) for secure, session-based access.
-- **API Performance**: Asynchronous endpoints for fast data retrieval and deletion.
-- **Persistence**: SQLite database with SQLAlchemy ORM to manage intelligence records locally.
-
-### 2. Frontend (Streamlit Dashboard)
-- **Console**: A high-performance research interface for running new scans.
-- **Archive**: A historical repository of all past discoveries.
-- **UX**: A "Dark Mode" specialized theme designed for focus and productivity.
-
-### 3. AI Core (Research Agent)
-- **Model**: Gemini 3 Pro (`gemini-3-pro-preview`).
-- **Tooling**: Integrated `google_search` for high-accuracy real-time grounding.
-- **Reliability**: Built-in "Safe Mode" that gracefully handles API quota limits.
+1.  **Dashboard (Streamlit)**: Captures user input (URLs) and displays historical research.
+2.  **API Gateway (FastAPI)**: Validates authentication and routes requests to the intelligence engine.
+3.  **Research Agent (Gemini 3)**: Performs the live web crawl and intelligence extraction.
+4.  **Database (SQLAlchemy)**: Permanently stores every successful discovery.
 
 ---
 
-## ⚙️ Setup & Local Execution
+## ⚙️ Setup & Installation
 
 ### 1. Prerequisites
-Ensure you have **Python 3.9 or higher** installed on your system.
+- Python 3.9+ installed.
+- A valid Google Gemini API Key.
 
 ### 2. Installation
 ```bash
-# Clone the repository and enter the directory
+# Clone the repository
 git clone <your-repo-url>
 cd nexus-intel
 
-# Create a virtual environment
+# Create and activate virtual environment
 python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
 
-# Activate the environment
-# Windows:
-venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate
-
-# Install all necessary libraries
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 3. Configuration
-Create a `.env` file in the root folder with the following:
-```env
-API_KEY=YOUR_GEMINI_API_KEY_HERE
-SECRET_KEY=any_random_secure_string_2025
-```
-
-### 4. Running the Project
-Simply run the master orchestrator script:
+### 3. Execution
+The project includes a master orchestrator that handles everything (API + Dashboard + Browser).
 ```bash
 python main.py
 ```
-This script handles the cleanup of ports, starts the FastAPI server, launches the Streamlit UI, and opens your browser automatically.
 
 ---
 
 ## 🛡️ Internal Access Credentials
-- **Username**: `admin@nexus.io` (or any valid email format)
-- **Password**: `password` (any non-empty string)
-
-## 📂 Design Assumptions
-- **Security**: Since this is an internal tool, the login logic is permissive (logs credentials to DB but grants access to any valid format) for ease of internal use.
-- **Data Privacy**: All research results are stored locally in `nexus_intel.db` to ensure data sovereignty.
-- **Scalability**: The architecture allows for swapping SQLite with PostgreSQL in a production cloud environment with minimal code changes.
+- **Username**: Any email format (e.g., `admin@nexus.io`)
+- **Password**: Any non-empty string.
+*(Note: As an internal tool, login is designed for convenience while still logging session data.)*
