@@ -2,7 +2,7 @@
 
 **NexusIntel** is a high-performance, internal research engine designed for sales teams, analysts, and lead generation specialists. It automates the extraction of business intelligence and verified contact information directly from the web using state-of-the-art AI.
 
----
+
 
 ##  Problem Statement
 In the modern B2B landscape, manual company research is a massive bottleneck. Research analysts often spend **40-60% of their day** performing repetitive tasks:
