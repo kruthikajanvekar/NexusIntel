@@ -46,7 +46,7 @@ class LoginRequest(BaseModel):
 class AnalysisRequest(BaseModel):
     url: str
 
-# Lazy init to avoid startup failures on Render
+# using init to avoid startup failures on Render
 db_manager = None
 research_agent = None
 

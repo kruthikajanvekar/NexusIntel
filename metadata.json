@@ -1,0 +1,5 @@
+{
+  "name": "NexusIntel - Internal Website Intelligence",
+  "description": "Enterprise-grade contact discovery and business intelligence tool powered by FastAPI, Streamlit, and Gemini 3 Pro.",
+  "requestFramePermissions": []
+}
