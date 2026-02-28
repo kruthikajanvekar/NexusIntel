@@ -44,8 +44,13 @@ def run_services():
 
     is_windows = os.name == 'nt'
     
-    print("📡 Launching Backend (Port 8000)...")
-    backend_cmd = [sys.executable, "-m", "uvicorn", "app.api:app", "--host", "127.0.0.1", "--port", "8000"]
+    # backend port comes from the environment (Railway supplies $PORT)
+    backend_port = int(os.getenv("PORT", "8000"))
+    print(f"📡 Launching Backend (Port {backend_port})...")
+    backend_cmd = [
+        sys.executable, "-m", "uvicorn", "app.api:app",
+        "--host", "127.0.0.1", "--port", str(backend_port)
+    ]
     backend_process = subprocess.Popen(
         backend_cmd,
         stdout=subprocess.PIPE,
