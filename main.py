@@ -62,24 +62,29 @@ def run_services():
         if is_port_in_use(8000): break
         time.sleep(1)
 
-    print("🖥️  Launching Dashboard (Port 8501)...")
-    frontend_cmd = [sys.executable, "-m", "streamlit", "run", "app/dashboard.py", "--server.port", "8501", "--server.address", "127.0.0.1"]
-    frontend_process = subprocess.Popen(
-        frontend_cmd,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        bufsize=1,
-        shell=is_windows
-    )
-    threading.Thread(target=stream_logs, args=(frontend_process.stdout, "DASHBOARD"), daemon=True).start()
+    # Unless specifically disabled, start the streamlit dashboard as well
+    if os.getenv("DISABLE_DASHBOARD", "0") not in ("1", "true", "True"):
+        print("🖥️  Launching Dashboard (Port 8501)...")
+        frontend_cmd = [sys.executable, "-m", "streamlit", "run", "app/dashboard.py", "--server.port", "8501", "--server.address", "127.0.0.1"]
+        frontend_process = subprocess.Popen(
+            frontend_cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            bufsize=1,
+            shell=is_windows
+        )
+        threading.Thread(target=stream_logs, args=(frontend_process.stdout, "DASHBOARD"), daemon=True).start()
 
-    print("\n" + "—"*60)
-    print("🚀 ALL SYSTEMS UPDATED AND ONLINE")
-    print("🔗 URL: http://127.0.0.1:8501")
-    print("—"*60 + "\n")
+        print("\n" + "—"*60)
+        print("🚀 ALL SYSTEMS UPDATED AND ONLINE")
+        print("🔗 URL: http://127.0.0.1:8501")
+        print("—"*60 + "\n")
 
-    webbrowser.open("http://127.0.0.1:8501")
+        if os.getenv("NO_BROWSER", "0") not in ("1", "true", "True"):
+            webbrowser.open("http://127.0.0.1:8501")
+    else:
+        print("[INFO] Dashboard disabled (DISABLE_DASHBOARD=true)")
 
     try:
         while True:

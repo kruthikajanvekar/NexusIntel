@@ -74,11 +74,46 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 3. Execution
-The project includes a master orchestrator that handles everything (API + Dashboard + Browser).
+#### Local start
+For development the repository includes a small orchestration script. Running `main.py` will start both the
+FastAPI backend and the Streamlit dashboard in a browser tab:
 ```bash
 python main.py
 ```
+
+The backend itself lives in `app/api.py` and can be run directly with Uvicorn if preferred:
+```bash
+uvicorn app.api:app --reload  # development
+```
+
+### 4. Deployment
+This project is structured to work on container platforms such as Railway, Render, Heroku, etc. When
+shipping the service you usually deploy **only the API**; the dashboard can remain a local tool or be
+hosted separately if needed.
+
+A minimal `Procfile` (included in the repo) tells the platform how to start the web process:
+```
+web: uvicorn app.api:app --host 0.0.0.0 --port $PORT
+```
+
+Environment variables should be set via the hosting provider's dashboard or CLI. Refer to
+`.env.example` in the repo for a template (it currently includes `SECRET_KEY` and an optional
+`API_BASE_URL` value used by the dashboard).
+
+```markdown
+# Example deploy workflow (Railway CLI)
+railway init           # create/link a project
+railway variables set SECRET_KEY=somesecret
+railway up             # build & deploy
+```
+
+Once deployed the service will be reachable at a generated URL like `https://<project>.railway.app`.
+Any git push to the connected branch will trigger a rebuild.
+
+> **Note:** if you want to expose the Streamlit dashboard as well, either run a separate Railway
+> service that executes `streamlit run app/dashboard.py` with `API_BASE_URL` pointed at your backend,
+> or simply continue to run it locally against the deployed API.
+
 
 
 

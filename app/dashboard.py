@@ -10,7 +10,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_BASE_URL = "http://127.0.0.1:8000"
+# API endpoint that the dashboard communicates with. When deploying,
+# set this variable via environment so the dashboard can talk to the
+# hosted backend instead of localhost.
+API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
 
 st.set_page_config(
     page_title="NexusIntel | Intelligence Unit",
