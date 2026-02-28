@@ -1,8 +1,11 @@
 import os
 from typing import List, Optional
-from fastapi import FastAPI, HTTPException, Depends, Security
+from fastapi import FastAPI, HTTPException, Depends, Security, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+# additional dependency for the proxy
+import httpx
 from pydantic import BaseModel
 from jose import jwt, JWTError
 from dotenv import load_dotenv
@@ -12,7 +15,15 @@ from src.llm.research_agent import ResearchAgent
 
 load_dotenv()
 
-app = FastAPI(title="NexusIntel API")
+# `api` contains all of our JSON endpoints. We'll mount it later under
+# `/api` so that we can run a small proxy that forwards everything else to the
+# Streamlit dashboard (which listens on localhost:8501).
+api = FastAPI(title="NexusIntel API")
+
+# outer application used by Uvicorn. requests to `/api/*` are handled by the
+# `api` instance; all other paths are proxied to Streamlit.
+app = FastAPI()
+app.mount("/api", api)
 
 app.add_middleware(
     CORSMiddleware,
@@ -97,3 +108,35 @@ async def fetch_history(current_user: dict = Depends(get_current_user), db=Depen
 async def remove_record(record_id: int, current_user: dict = Depends(get_current_user), db=Depends(get_db)):
     db.delete_record(record_id)
     return {"status": "deleted"}
+
+
+# ----- proxy middleware ---------------------------------------------------
+# when the application is deployed the Streamlit dashboard will be started
+# concurrently (on the same container) at port 8501.  Because Railway only
+# exposes a single public port ($PORT) we need to funnel all non-API traffic
+# through this FastAPI process and forward it to Streamlit.  This lets the
+# backend and dashboard share the same URL/domain; the dashboard is reachable
+# at the root path while the JSON API remains under "/api".
+
+@app.middleware("http")
+async def proxy_to_streamlit(request: Request, call_next):
+    # only proxy when request is not targeting our mounted `/api` application
+    if not request.url.path.startswith("/api"):
+        # build new url pointing to the local Streamlit instance
+        upstream = httpx.URL(f"http://127.0.0.1:8501{request.url.path}")
+        async with httpx.AsyncClient() as client:
+            resp = await client.request(
+                request.method,
+                upstream,
+                headers={k: v for k, v in request.headers.items()},
+                content=await request.body(),
+                params=request.query_params,
+                timeout=None,
+                follow_redirects=True,
+            )
+            return fastapi.Response(
+                content=resp.content,
+                status_code=resp.status_code,
+                headers=resp.headers,
+            )
+    return await call_next(request)
