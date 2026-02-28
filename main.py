@@ -45,6 +45,7 @@ def run_services():
     is_windows = os.name == 'nt'
     
     # backend port comes from the environment (Railway supplies $PORT)
+    # backend port comes from the environment (Railway supplies $PORT)
     backend_port = int(os.getenv("PORT", "8000"))
     print(f"📡 Launching Backend (Port {backend_port})...")
     backend_cmd = [
@@ -62,9 +63,10 @@ def run_services():
     threading.Thread(target=stream_logs, args=(backend_process.stdout, "BACKEND"), daemon=True).start()
     threading.Thread(target=stream_logs, args=(backend_process.stderr, "BACKEND-LOG"), daemon=True).start()
     
-    # Wait for backend to be ready
+    # Wait for backend to be ready on the chosen port
     for _ in range(10):
-        if is_port_in_use(8000): break
+        if is_port_in_use(backend_port):
+            break
         time.sleep(1)
 
     # Unless specifically disabled, start the streamlit dashboard as well
